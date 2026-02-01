@@ -253,5 +253,7 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Initial implementation complete. Backend APIs for health check and roles are working. Need to test PDF upload, resume analysis with OpenAI, and Supabase database operations. Supabase URL: https://wnatljhykgfploxnhotr.supabase.co. Tables created: resumes, analyses."
+  - agent: "main"
+    message: "Added Razorpay payment integration. New endpoints: POST /api/create-order (creates Razorpay order), POST /api/verify-payment (verifies payment and unlocks report). Test credentials configured."
   - agent: "testing"
     message: "✅ BACKEND TESTING COMPLETE: All 6 backend APIs tested and working correctly. Fixed pdf-parse library issue by creating required test directory. Key findings: 1) PDF upload extracts text successfully using pdf-parse 2) OpenAI GPT-4o-mini analysis returns proper structured JSON 3) Supabase integration working for all CRUD operations 4) All endpoints handle errors appropriately. No critical issues found."
