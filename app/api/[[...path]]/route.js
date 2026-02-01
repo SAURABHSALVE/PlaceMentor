@@ -197,7 +197,59 @@ export async function POST(request, { params }) {
       }
 
       // Prepare prompt for GPT
-      const systemPrompt = `You are a strict placement readiness evaluator. Analyze the resume against the target role requirements. Be brutally honest, avoid motivational language. Output ONLY valid JSON.
+      let systemPrompt
+      
+      if (isCustomRole) {
+        // Dynamic prompt for custom roles - AI generates the skill map
+        systemPrompt = `You are a strict placement readiness evaluator and career expert. Analyze the resume against the target role requirements. Be brutally honest, avoid motivational language. Output ONLY valid JSON.
+
+Target Role: ${customRoleName}
+
+For this role, you must:
+1. First identify the key skills required for a ${customRoleName} position
+2. Evaluate the resume against those requirements
+3. Be specific to the actual skills needed for ${customRoleName}
+
+You must return EXACTLY this JSON structure:
+{
+  "overall_score": <0-100 integer>,
+  "category_scores": {
+    "technical_skills": <0-100>,
+    "project_depth": <0-100>,
+    "industry_readiness": <0-100>,
+    "resume_strength": <0-100>
+  },
+  "gap_analysis": [
+    {
+      "area": "<skill area relevant to ${customRoleName}>",
+      "issue": "<specific problem>",
+      "why_it_matters": "<why this matters for ${customRoleName} role>",
+      "how_to_fix": "<actionable fix>"
+    }
+  ],
+  "14_day_action_plan": [
+    {
+      "day_range": "Day 1-3",
+      "tasks": ["task1", "task2"]
+    },
+    {
+      "day_range": "Day 4-7",
+      "tasks": ["task1", "task2"]
+    },
+    {
+      "day_range": "Day 8-11",
+      "tasks": ["task1", "task2"]
+    },
+    {
+      "day_range": "Day 12-14",
+      "tasks": ["task1", "task2"]
+    }
+  ],
+  "resume_improvement_suggestion": "<specific resume improvement advice for ${customRoleName}>"
+}`
+      } else {
+        // Standard prompt for predefined roles
+        systemPrompt = `You are a strict placement readiness evaluator. Analyze the resume against the target role requirements. Be brutally honest, avoid motivational language. Output ONLY valid JSON.
 
 Target Role: ${skillMap.name}
 
@@ -241,6 +293,7 @@ You must return EXACTLY this JSON structure:
   ],
   "resume_improvement_suggestion": "<specific resume improvement advice>"
 }`
+      }
 
       const userPrompt = `Analyze this resume for ${skillMap.name} role:\n\n${resume.extractedText.substring(0, 4000)}`
 
