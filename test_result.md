@@ -161,15 +161,18 @@ backend:
 
   - task: "Get analyses API"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/app/api/[[...path]]/route.js"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "GET /api/analyses?userId=xxx - returns user's analyses"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Get analyses working correctly. Fetches user's analyses from Supabase by userId, returns array of analyses with full report data, ordered by creation date descending."
 
   - task: "Unlock report API"
     implemented: true
