@@ -241,13 +241,11 @@ frontend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 1
+  test_sequence: 2
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Upload resume API with PDF parsing"
-    - "Analyze resume API with OpenAI GPT-4o-mini"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
