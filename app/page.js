@@ -1075,25 +1075,35 @@ function Dashboard({ user, onSignOut }) {
 
             {/* Unlock Banner */}
             {!isPaid && (
-              <Card className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 border-purple-500/30 backdrop-blur-sm">
+              <Card className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 border-purple-500/30 backdrop-blur-sm overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                        <Lock className="w-6 h-6 text-white" />
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                        <CreditCard className="w-7 h-7 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-white font-semibold">Unlock Full Report</h3>
-                        <p className="text-gray-400 text-sm">Get detailed analysis, gap breakdown, and personalized 14-day plan</p>
+                        <h3 className="text-white font-semibold text-lg">Unlock Full Report</h3>
+                        <p className="text-gray-400 text-sm">Detailed analysis • Gap breakdown • 14-day action plan • Resume tips</p>
                       </div>
                     </div>
-                    <Button 
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8"
-                      onClick={handleUnlock}
-                      disabled={loading}
-                    >
-                      {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Unlock className="mr-2 h-4 w-4" /> Unlock for ₹49</>}
-                    </Button>
+                    <div className="flex flex-col items-center sm:items-end gap-2">
+                      <Button 
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-5 text-lg shadow-lg shadow-purple-500/25"
+                        onClick={handleUnlock}
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Processing...</>
+                        ) : (
+                          <><Unlock className="mr-2 h-5 w-5" /> Pay ₹49 & Unlock</>
+                        )}
+                      </Button>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Shield className="w-3 h-3" />
+                        <span>Secure payment via Razorpay</span>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
