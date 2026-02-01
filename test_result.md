@@ -176,15 +176,18 @@ backend:
 
   - task: "Unlock report API"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/app/api/[[...path]]/route.js"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "POST /api/unlock-report - sets isPaid=true for analysis"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Unlock report working correctly. Updates analysis record in Supabase to set isPaid=true for specified analysisId and userId. Returns success confirmation."
 
 frontend:
   - task: "Landing page"
