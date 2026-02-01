@@ -101,3 +101,145 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "PlaceMentor - Resume analysis app with Supabase auth, PDF upload, GPT-4o-mini analysis, scoring and 14-day action plan. Free tier shows overall score, Paid tier shows full report."
+
+backend:
+  - task: "Health check API"
+    implemented: true
+    working: true
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "GET /api/health returns status ok"
+
+  - task: "Get roles API"
+    implemented: true
+    working: true
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "GET /api/roles returns 3 roles"
+
+  - task: "Upload resume API with PDF parsing"
+    implemented: true
+    working: "NA"
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "POST /api/upload-resume - accepts PDF, extracts text with pdf-parse, saves to Supabase"
+
+  - task: "Analyze resume API with OpenAI GPT-4o-mini"
+    implemented: true
+    working: "NA"
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "POST /api/analyze - analyzes resume against role skill map using GPT-4o-mini"
+
+  - task: "Get analyses API"
+    implemented: true
+    working: "NA"
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "GET /api/analyses?userId=xxx - returns user's analyses"
+
+  - task: "Unlock report API"
+    implemented: true
+    working: "NA"
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "POST /api/unlock-report - sets isPaid=true for analysis"
+
+frontend:
+  - task: "Landing page"
+    implemented: true
+    working: true
+    file: "/app/app/page.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Landing page with hero, features, pricing visible"
+
+  - task: "Authentication (Supabase)"
+    implemented: true
+    working: "NA"
+    file: "/app/app/page.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Sign up and sign in with Supabase auth"
+
+  - task: "Dashboard with resume upload"
+    implemented: true
+    working: "NA"
+    file: "/app/app/page.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Upload PDF, select role, trigger analysis"
+
+  - task: "Results page with free/paid tiers"
+    implemented: true
+    working: "NA"
+    file: "/app/app/page.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Shows overall score free, locked content for paid"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Upload resume API with PDF parsing"
+    - "Analyze resume API with OpenAI GPT-4o-mini"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Initial implementation complete. Backend APIs for health check and roles are working. Need to test PDF upload, resume analysis with OpenAI, and Supabase database operations. Supabase URL: https://wnatljhykgfploxnhotr.supabase.co. Tables created: resumes, analyses."
