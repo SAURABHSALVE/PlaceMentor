@@ -193,32 +193,32 @@ def test_upload_resume():
     """Test the resume upload endpoint"""
     print("\n=== Testing Resume Upload Endpoint ===")
     try:
-        # Create test PDF
-        pdf_buffer = create_test_pdf()
+        # Use an existing valid PDF from the pdf-parse test files
+        pdf_path = "/app/node_modules/pdf-parse/test/data/01-valid.pdf"
         
-        # Prepare multipart form data
-        files = {
-            'file': ('test_resume.pdf', pdf_buffer, 'application/pdf')
-        }
-        data = {
-            'userId': TEST_USER_ID
-        }
-        
-        response = requests.post(f"{BASE_URL}/upload-resume", files=files, data=data, timeout=30)
-        print(f"Status Code: {response.status_code}")
-        print(f"Response: {response.json()}")
-        
-        if response.status_code == 200:
-            result = response.json()
-            if result.get('success') and result.get('resumeId'):
-                print("✅ Resume upload working correctly")
-                return True, result.get('resumeId')
+        with open(pdf_path, 'rb') as pdf_file:
+            files = {
+                'file': ('test_resume.pdf', pdf_file, 'application/pdf')
+            }
+            data = {
+                'userId': TEST_USER_ID
+            }
+            
+            response = requests.post(f"{BASE_URL}/upload-resume", files=files, data=data, timeout=30)
+            print(f"Status Code: {response.status_code}")
+            print(f"Response: {response.json()}")
+            
+            if response.status_code == 200:
+                result = response.json()
+                if result.get('success') and result.get('resumeId'):
+                    print("✅ Resume upload working correctly")
+                    return True, result.get('resumeId')
+                else:
+                    print("❌ Resume upload succeeded but missing required fields")
+                    return False, None
             else:
-                print("❌ Resume upload succeeded but missing required fields")
+                print(f"❌ Resume upload failed with status {response.status_code}")
                 return False, None
-        else:
-            print(f"❌ Resume upload failed with status {response.status_code}")
-            return False, None
     except Exception as e:
         print(f"❌ Resume upload error: {str(e)}")
         return False, None
