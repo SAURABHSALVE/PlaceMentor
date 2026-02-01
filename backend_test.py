@@ -155,8 +155,8 @@ def test_upload_resume():
             data = {
                 'userId': TEST_USER_ID
             }
-        
-        response = requests.post(f"{BASE_URL}/upload-resume", files=files, data=data, timeout=30)
+            
+            response = requests.post(f"{BASE_URL}/upload-resume", files=files, data=data, timeout=30)
         
         if response.status_code == 200:
             result = response.json()
