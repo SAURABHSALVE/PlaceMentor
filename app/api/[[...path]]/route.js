@@ -181,10 +181,19 @@ export async function POST(request, { params }) {
         return handleCORS(NextResponse.json({ error: 'Resume not found' }, { status: 404 }))
       }
 
-      // Get skill map for role
-      const skillMap = SKILL_MAPS[role]
+      // Get skill map for role (handle custom roles)
+      let skillMap = SKILL_MAPS[role]
+      let isCustomRole = false
+      let customRoleName = role
+      
       if (!skillMap) {
-        return handleCORS(NextResponse.json({ error: 'Invalid role' }, { status: 400 }))
+        // Check if it's a custom role
+        if (role.startsWith('custom:')) {
+          isCustomRole = true
+          customRoleName = role.replace('custom:', '')
+        } else {
+          return handleCORS(NextResponse.json({ error: 'Invalid role' }, { status: 400 }))
+        }
       }
 
       // Prepare prompt for GPT
