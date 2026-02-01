@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
+import Script from 'next/script'
 import { 
   Upload, 
   FileText, 
@@ -44,7 +45,9 @@ import {
   ChevronRight,
   Quote,
   Users,
-  GraduationCap
+  GraduationCap,
+  CreditCard,
+  IndianRupee
 } from 'lucide-react'
 
 const DEFAULT_ROLES = [
