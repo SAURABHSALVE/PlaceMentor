@@ -19,35 +19,40 @@ TEST_USER_ID = "test-user-123"
 
 def create_test_pdf():
     """Create a simple test PDF with resume content"""
-    buffer = io.BytesIO()
-    p = canvas.Canvas(buffer, pagesize=letter)
-    
-    # Add resume content
-    p.drawString(100, 750, "John Doe")
-    p.drawString(100, 730, "Frontend Developer")
-    p.drawString(100, 710, "Email: john.doe@email.com")
-    p.drawString(100, 690, "Phone: (555) 123-4567")
-    
-    p.drawString(100, 650, "EXPERIENCE:")
-    p.drawString(100, 630, "• 3 years of React development experience")
-    p.drawString(100, 610, "• Built responsive web applications using HTML, CSS, JavaScript")
-    p.drawString(100, 590, "• Worked with REST APIs and state management using Redux")
-    p.drawString(100, 570, "• Experience with Next.js and TypeScript")
-    
-    p.drawString(100, 530, "SKILLS:")
-    p.drawString(100, 510, "• JavaScript, React, Next.js, TypeScript")
-    p.drawString(100, 490, "• HTML5, CSS3, Tailwind CSS, Bootstrap")
-    p.drawString(100, 470, "• Redux, Context API, API integration")
-    p.drawString(100, 450, "• Git, GitHub, responsive design")
-    
-    p.drawString(100, 410, "PROJECTS:")
-    p.drawString(100, 390, "• E-commerce website with React and Node.js")
-    p.drawString(100, 370, "• Portfolio website with Next.js and Tailwind")
-    p.drawString(100, 350, "• Task management app with React hooks")
-    
-    p.save()
-    buffer.seek(0)
-    return buffer
+    try:
+        buffer = io.BytesIO()
+        p = canvas.Canvas(buffer, pagesize=letter)
+        
+        # Add resume content
+        p.drawString(100, 750, "John Doe")
+        p.drawString(100, 730, "Frontend Developer")
+        p.drawString(100, 710, "Email: john.doe@email.com")
+        p.drawString(100, 690, "Phone: (555) 123-4567")
+        
+        p.drawString(100, 650, "EXPERIENCE:")
+        p.drawString(100, 630, "3 years of React development experience")
+        p.drawString(100, 610, "Built responsive web applications using HTML, CSS, JavaScript")
+        p.drawString(100, 590, "Worked with REST APIs and state management using Redux")
+        p.drawString(100, 570, "Experience with Next.js and TypeScript")
+        
+        p.drawString(100, 530, "SKILLS:")
+        p.drawString(100, 510, "JavaScript, React, Next.js, TypeScript")
+        p.drawString(100, 490, "HTML5, CSS3, Tailwind CSS, Bootstrap")
+        p.drawString(100, 470, "Redux, Context API, API integration")
+        p.drawString(100, 450, "Git, GitHub, responsive design")
+        
+        p.drawString(100, 410, "PROJECTS:")
+        p.drawString(100, 390, "E-commerce website with React and Node.js")
+        p.drawString(100, 370, "Portfolio website with Next.js and Tailwind")
+        p.drawString(100, 350, "Task management app with React hooks")
+        
+        p.save()
+        buffer.seek(0)
+        return buffer
+    except Exception as e:
+        print(f"Error creating PDF: {e}")
+        # Fallback: create a simple text file as PDF
+        return create_simple_text_pdf()
 
 def test_health_endpoint():
     """Test the health check endpoint"""
