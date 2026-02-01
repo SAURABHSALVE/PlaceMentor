@@ -377,6 +377,90 @@ You must return EXACTLY this JSON structure:
       return handleCORS(NextResponse.json({ success: true, message: 'Report unlocked' }))
     }
 
+    // Create Razorpay order
+    if (path === '/create-order') {
+      const body = await request.json()
+      const { analysisId, userId, userEmail } = body
+
+      if (!analysisId || !userId) {
+        return handleCORS(NextResponse.json({ error: 'analysisId and userId required' }, { status: 400 }))
+      }
+
+      try {
+        // Create order with Razorpay - ₹49 = 4900 paise
+        const order = await razorpay.orders.create({
+          amount: 4900, // Amount in paise
+          currency: 'INR',
+          receipt: `receipt_${analysisId}`,
+          notes: {
+            analysisId,
+            userId,
+            userEmail: userEmail || ''
+          }
+        })
+
+        return handleCORS(NextResponse.json({
+          success: true,
+          orderId: order.id,
+          amount: order.amount,
+          currency: order.currency,
+          keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID
+        }))
+      } catch (error) {
+        console.error('Razorpay order creation error:', error)
+        return handleCORS(NextResponse.json({ error: 'Failed to create payment order' }, { status: 500 }))
+      }
+    }
+
+    // Verify Razorpay payment
+    if (path === '/verify-payment') {
+      const body = await request.json()
+      const { razorpayOrderId, razorpayPaymentId, razorpaySignature, analysisId, userId } = body
+
+      if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature || !analysisId || !userId) {
+        return handleCORS(NextResponse.json({ error: 'Missing required verification fields' }, { status: 400 }))
+      }
+
+      try {
+        // Verify signature
+        const keySecret = process.env.RAZORPAY_KEY_SECRET
+        const generatedSignature = crypto
+          .createHmac('sha256', keySecret)
+          .update(`${razorpayOrderId}|${razorpayPaymentId}`)
+          .digest('hex')
+
+        if (generatedSignature !== razorpaySignature) {
+          return handleCORS(NextResponse.json({ error: 'Payment signature verification failed' }, { status: 400 }))
+        }
+
+        // Update analysis to paid
+        const supabase = createServerClient()
+        const { error } = await supabase
+          .from('analyses')
+          .update({ 
+            isPaid: true,
+            paymentId: razorpayPaymentId,
+            orderId: razorpayOrderId
+          })
+          .eq('id', analysisId)
+          .eq('userId', userId)
+
+        if (error) {
+          console.error('Database update error:', error)
+          return handleCORS(NextResponse.json({ error: 'Failed to update payment status' }, { status: 500 }))
+        }
+
+        return handleCORS(NextResponse.json({
+          success: true,
+          message: 'Payment verified successfully',
+          paymentId: razorpayPaymentId
+        }))
+      } catch (error) {
+        console.error('Payment verification error:', error)
+        return handleCORS(NextResponse.json({ error: 'Payment verification failed' }, { status: 500 }))
+      }
+    }
+
     return handleCORS(NextResponse.json({ error: 'Not found' }, { status: 404 }))
   } catch (error) {
     console.error('POST Error:', error)
