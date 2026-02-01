@@ -3,6 +3,14 @@ import { v4 as uuidv4 } from 'uuid'
 import { createServerClient } from '@/lib/supabase-server'
 import { openaiClient, MODEL } from '@/lib/openai'
 import { SKILL_MAPS } from '@/lib/skillMaps'
+import Razorpay from 'razorpay'
+import crypto from 'crypto'
+
+// Initialize Razorpay
+const razorpay = new Razorpay({
+  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+})
 
 // CORS headers
 function corsHeaders() {
