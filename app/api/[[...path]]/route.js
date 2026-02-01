@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { createServerClient } from '@/lib/supabase-server'
 import { openaiClient, MODEL } from '@/lib/openai'
 import { SKILL_MAPS } from '@/lib/skillMaps'
-import pdf from 'pdf-parse'
 
 // CORS headers
 function corsHeaders() {
