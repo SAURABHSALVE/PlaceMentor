@@ -707,21 +707,76 @@ function Dashboard({ user, onSignOut }) {
 
   const handleUnlock = async () => {
     setLoading(true)
+    setError('')
+    
     try {
-      const response = await fetch('/api/unlock-report', {
+      // Step 1: Create Razorpay order
+      const orderResponse = await fetch('/api/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           analysisId,
-          userId: user.id
+          userId: user.id,
+          userEmail: user.email
         }),
       })
 
-      if (response.ok) {
-        setIsPaid(true)
+      if (!orderResponse.ok) {
+        throw new Error('Failed to create payment order')
       }
+
+      const orderData = await orderResponse.json()
+
+      // Step 2: Open Razorpay checkout
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'PlaceMentor',
+        description: 'Full Report Access - Placement Readiness Analysis',
+        order_id: orderData.orderId,
+        prefill: {
+          email: user.email,
+        },
+        handler: async function (response) {
+          try {
+            // Step 3: Verify payment
+            const verifyResponse = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+                analysisId,
+                userId: user.id
+              }),
+            })
+
+            if (!verifyResponse.ok) {
+              throw new Error('Payment verification failed')
+            }
+
+            setIsPaid(true)
+            setError('')
+          } catch (err) {
+            setError('Payment verification failed. Please contact support.')
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false)
+          },
+        },
+        theme: {
+          color: '#9333ea',
+        },
+      }
+
+      const razorpay = new window.Razorpay(options)
+      razorpay.open()
     } catch (err) {
-      setError('Failed to unlock report')
+      setError(err.message || 'Failed to initiate payment')
     } finally {
       setLoading(false)
     }
