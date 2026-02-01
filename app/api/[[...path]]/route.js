@@ -438,9 +438,10 @@ You must return EXACTLY this JSON structure:
         const { error } = await supabase
           .from('analyses')
           .update({ 
-            isPaid: true,
-            paymentId: razorpayPaymentId,
-            orderId: razorpayOrderId
+            isPaid: true
+            // Note: paymentId and orderId columns don't exist in current schema
+            // paymentId: razorpayPaymentId,
+            // orderId: razorpayOrderId
           })
           .eq('id', analysisId)
           .eq('userId', userId)
