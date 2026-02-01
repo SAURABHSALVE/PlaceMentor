@@ -391,7 +391,7 @@ You must return EXACTLY this JSON structure:
         const order = await razorpay.orders.create({
           amount: 4900, // Amount in paise
           currency: 'INR',
-          receipt: `receipt_${analysisId}`,
+          receipt: `rcpt_${analysisId.substring(0, 30)}`, // Limit to 40 chars total
           notes: {
             analysisId,
             userId,
