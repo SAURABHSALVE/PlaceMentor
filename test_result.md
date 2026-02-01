@@ -189,6 +189,36 @@ backend:
         agent: "testing"
         comment: "✅ TESTED: Unlock report working correctly. Updates analysis record in Supabase to set isPaid=true for specified analysisId and userId. Returns success confirmation."
 
+  - task: "Create Razorpay order API"
+    implemented: true
+    working: true
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "POST /api/create-order - creates Razorpay payment order for ₹49"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Create order working correctly. Creates Razorpay order with amount 4900 paise (₹49), currency INR, returns orderId, amount, currency, and keyId. Fixed receipt field length issue (max 40 chars)."
+
+  - task: "Verify Razorpay payment API"
+    implemented: true
+    working: true
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "POST /api/verify-payment - verifies Razorpay payment signature and unlocks report"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Verify payment working correctly. Validates Razorpay signature using HMAC-SHA256, updates analysis isPaid=true in Supabase. Note: paymentId and orderId columns don't exist in current schema so only isPaid is updated."
+
 frontend:
   - task: "Landing page"
     implemented: true
