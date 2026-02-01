@@ -121,7 +121,8 @@ export async function POST(request, { params }) {
       
       let extractedText = ''
       try {
-        const pdfData = await pdf(buffer)
+        const pdfParse = (await import('pdf-parse')).default
+        const pdfData = await pdfParse(buffer)
         extractedText = pdfData.text
       } catch (pdfError) {
         console.error('PDF parsing error:', pdfError)
