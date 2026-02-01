@@ -131,15 +131,18 @@ backend:
 
   - task: "Upload resume API with PDF parsing"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/app/api/[[...path]]/route.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "POST /api/upload-resume - accepts PDF, extracts text with pdf-parse, saves to Supabase"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: PDF upload working correctly. Accepts PDF files, extracts text using pdf-parse library, saves to Supabase with UUID. Fixed pdf-parse library issue by creating required test directory. Returns resumeId and text length."
 
   - task: "Analyze resume API with OpenAI GPT-4o-mini"
     implemented: true
