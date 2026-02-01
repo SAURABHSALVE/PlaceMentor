@@ -295,7 +295,8 @@ You must return EXACTLY this JSON structure:
 }`
       }
 
-      const userPrompt = `Analyze this resume for ${skillMap.name} role:\n\n${resume.extractedText.substring(0, 4000)}`
+      const roleName = isCustomRole ? customRoleName : skillMap.name
+      const userPrompt = `Analyze this resume for ${roleName} role:\n\n${resume.extractedText.substring(0, 4000)}`
 
       // Call OpenAI
       let analysisResult
