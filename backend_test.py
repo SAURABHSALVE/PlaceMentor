@@ -145,15 +145,16 @@ def test_get_roles():
 def test_upload_resume():
     """Test POST /api/upload-resume"""
     try:
-        # Create test PDF
-        pdf_content = create_test_pdf()
+        # Use a valid PDF from the pdf-parse test data
+        pdf_path = './node_modules/pdf-parse/test/data/01-valid.pdf'
         
-        files = {
-            'file': ('test_resume.pdf', BytesIO(pdf_content), 'application/pdf')
-        }
-        data = {
-            'userId': TEST_USER_ID
-        }
+        with open(pdf_path, 'rb') as f:
+            files = {
+                'file': ('test_resume.pdf', f, 'application/pdf')
+            }
+            data = {
+                'userId': TEST_USER_ID
+            }
         
         response = requests.post(f"{BASE_URL}/upload-resume", files=files, data=data, timeout=30)
         
