@@ -1332,19 +1332,42 @@ export default function App() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      setUser(session?.user || null)
-      setLoading(false)
+      try {
+        if (supabase?.auth?.getSession) {
+          const res = await supabase.auth.getSession()
+          const session = res?.data?.session
+          setUser(session?.user || null)
+        } else if (supabase?.auth?.getUser) {
+          const res = await supabase.auth.getUser()
+          const userObj = res?.data?.user
+          setUser(userObj || null)
+        } else {
+          setUser(null)
+        }
+      } catch (e) {
+        console.warn('Auth check failed', e)
+        setUser(null)
+      } finally {
+        setLoading(false)
+      }
     }
+
     checkAuth()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user || null)
+    let unsubscribe = () => {}
+    try {
+      if (supabase?.auth?.onAuthStateChange) {
+        const res = supabase.auth.onAuthStateChange((event, session) => {
+          setUser(session?.user || null)
+        })
+        const subscription = res?.data?.subscription || res
+        unsubscribe = subscription?.unsubscribe?.bind(subscription) || (() => {})
       }
-    )
+    } catch (e) {
+      console.warn('onAuthStateChange not available', e)
+    }
 
-    return () => subscription.unsubscribe()
+    return () => unsubscribe()
   }, [])
 
   const handleSignOut = async () => {
