@@ -1,0 +1,38 @@
+# Files to ignore during Vercel build
+
+# Local environment files (never include in builds)
+.env
+.env.local
+.env.production.local
+
+# Testing
+test/
+tests/
+backend_test.py
+test_result.md
+test.txt
+test_reports/
+
+# Development
+.git
+.gitignore
+node_modules
+.vscode
+.idea
+
+# System files
+.DS_Store
+*.pem
+*.log
+
+# Python
+__pycache__
+*.pyc
+venv/
+.venv/
+
+# Build outputs (Next.js handles these)
+.next
+out
+dist
+build
